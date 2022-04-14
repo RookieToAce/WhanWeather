@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/bgImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/bg_place" />
+
+    <FrameLayout
+        android:id="@+id/actionBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/design_default_color_primary">
+
+        <EditText
+            android:id="@+id/searchPlaceEdit"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:autofillHints="no"
+            android:inputType="text"
+            android:hint="输入地点"
+            android:background="@drawable/search_bg" />
+
+    </FrameLayout>
+
+    <include
+        layout="@layout/place_item"
+        android:id="@+id/placeCard"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:visibility="gone"
+        android:layout_below="@id/actionBarLayout" />
+
+
+</RelativeLayout>
