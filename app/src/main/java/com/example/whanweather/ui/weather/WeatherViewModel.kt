@@ -4,6 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.whanweather.logic.Repository
+import com.example.whanweather.logic.network.Weather
+import com.example.whanweather.ui.search.DailyResponse
+import com.example.whanweather.ui.search.NowResponse
 
 /**
  * 天气显示界面的ViewModel
@@ -16,7 +19,7 @@ class WeatherViewModel : ViewModel() {
 
     private val searchLiveData = MutableLiveData<String>()
 
-    val placeName = ""
+    var placeName = ""
 
     val weatherLiveData = Transformations.switchMap(searchLiveData) { location ->
         Repository.refreshWeather(location)

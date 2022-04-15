@@ -2,9 +2,9 @@ package com.example.whanweather.ui.search
 
 import com.google.gson.annotations.SerializedName
 
-data class LifeIndexResponse(val result: Result) {
+data class LifeIndexResponse(val results: List<LifeIndex>) {
 
-    data class Result(val location: Location, val suggestion: Suggestion) {
+    data class LifeIndex(val location: Location, val suggestion: Suggestion) {
 
         data class Location(val name: String)
 

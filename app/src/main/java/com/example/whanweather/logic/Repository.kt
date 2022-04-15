@@ -46,25 +46,26 @@ object Repository {
             val deferredLifeIndex = async {
                 WhanWeatherNetwork.searchLifeIndex(location)
             }
+            val deferredNow = async {
+                WhanWeatherNetwork.searchPlace(location)
+            }
 
             val dailyResponse = deferredDaily.await()
             val lifeIndexResponse = deferredLifeIndex.await()
+            val nowResponse = deferredNow.await()
 
-            if (dailyResponse.results.location.name.isNotEmpty() && lifeIndexResponse.result.location.name.isNotEmpty()) {
-                val weather = Weather(dailyResponse, lifeIndexResponse)
+            if (dailyResponse.results.isNotEmpty()
+                && lifeIndexResponse.results.isNotEmpty()
+                && nowResponse.results.isNotEmpty()
+            ) {
+                val weather = Weather(dailyResponse, lifeIndexResponse, nowResponse)
                 Result.success(weather)
             } else {
-                Result.failure(RuntimeException("No Response"))
+                Result.failure(RuntimeException("No response"))
             }
+
         }
 
-//        val dailyResponse = WhanWeatherNetwork.searchDaily(location)
-//        if (dailyResponse.results.location.name.isNotEmpty()) {
-//            val daily = dailyResponse.results
-//            Result.success(daily)
-//        } else {
-//            Result.failure(java.lang.RuntimeException("No response"))
-//        }
     }
 
 

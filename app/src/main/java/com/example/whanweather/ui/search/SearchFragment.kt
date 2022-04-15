@@ -1,5 +1,6 @@
 package com.example.whanweather.ui.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.whanweather.R
 import com.example.whanweather.logic.model.getSky
+import com.example.whanweather.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.fragment_place.*
 import kotlinx.android.synthetic.main.place_item.*
 
@@ -58,12 +60,22 @@ class SearchFragment : Fragment() {
             }
         })
 
+        placeCard.setOnClickListener {
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra("place_name", placeName.text)
+//                val text = placeName.text
+            }
+
+            startActivity(intent)
+            activity?.finish()
+        }
+
     }
 
     private fun refreshPlaceCard() {
         val placeResponse = viewModel.nowData[0].location
         val nowResponse = viewModel.nowData[0].now
-        Log.d("main","size = ${viewModel.nowData.size}")
+        Log.d("main", "size = ${viewModel.nowData.size}")
         placeName.text = placeResponse.name
         placeAddress.text = placeResponse.path
         nowWeatherImg.setImageResource(getSky(nowResponse.text).icon)
