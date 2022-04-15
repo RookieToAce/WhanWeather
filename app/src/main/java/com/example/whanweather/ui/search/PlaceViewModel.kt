@@ -15,7 +15,7 @@ class PlaceViewModel : ViewModel() {
 
     private val searchLiveData = MutableLiveData<String>()
 
-    val nowData = ArrayList<Place>()
+    val nowData = ArrayList<NowResponse.Place>()
 
     val placeLiveData = Transformations.switchMap(searchLiveData) { location ->
         Repository.searchPlace(location)

@@ -41,6 +41,7 @@ class SearchFragment : Fragment() {
                 viewModel.searchPlace(content)
             } else {
                 placeCard.visibility = View.GONE
+                viewModel.nowData.clear()
             }
         }
 
