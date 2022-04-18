@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.whanweather.R
@@ -23,8 +26,8 @@ class WeatherActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val controller = ViewCompat.getWindowInsetsController(window.decorView)
         setContentView(R.layout.activity_weather)
-
 
         //通过搜索界面搜索出来的点击事件的Intent来触发这个天气界面
         if (viewModel.placeName.isEmpty()) {
@@ -110,7 +113,7 @@ class WeatherActivity : AppCompatActivity() {
         dressingText.text = lifeIndex.suggestion.dressing.brief
         ultravioletText.text = lifeIndex.suggestion.uv.brief
         carWashingText.text = lifeIndex.suggestion.carWashing.brief
-        
+
         weatherLayout.visibility = View.VISIBLE
 
     }

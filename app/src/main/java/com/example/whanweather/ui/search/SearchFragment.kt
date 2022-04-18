@@ -36,6 +36,17 @@ class SearchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        //先进性判断，如果有地点保存，则直接进入保存的地点的天气情况，避免主界面是搜索界面！！！
+        if (viewModel.isPlaceSaved()) {
+            val place = viewModel.getSavedPlace()
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra("place_name",place.location.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
+
         searchPlaceEdit.addTextChangedListener {
             val content = it.toString()
             if (content.isNotEmpty()) {
@@ -63,9 +74,9 @@ class SearchFragment : Fragment() {
         placeCard.setOnClickListener {
             val intent = Intent(context, WeatherActivity::class.java).apply {
                 putExtra("place_name", placeName.text)
-//                val text = placeName.text
             }
-
+            val place = viewModel.nowData[0]
+            viewModel.savePlace(place)
             startActivity(intent)
             activity?.finish()
         }

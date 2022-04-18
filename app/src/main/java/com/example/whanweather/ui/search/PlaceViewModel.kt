@@ -25,4 +25,12 @@ class PlaceViewModel : ViewModel() {
         searchLiveData.value = location
     }
 
+    //对PlaceViewModel中的数据进行处理，放在ViewModel中，不建议放在Activity中进行处理
+    //规范点应该写入线程，并使用liveData对象来进行观察。
+    fun savePlace(place: NowResponse.Place) = Repository.savePlace(place)
+
+    fun getSavedPlace() = Repository.getSavedPlace()
+
+    fun isPlaceSaved() = Repository.isPlaceSaved()
+
 }

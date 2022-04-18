@@ -1,8 +1,10 @@
 package com.example.whanweather.logic
 
 import androidx.lifecycle.liveData
+import com.example.whanweather.logic.dao.PlaceDao
 import com.example.whanweather.logic.network.Weather
 import com.example.whanweather.logic.network.WhanWeatherNetwork
+import com.example.whanweather.ui.search.NowResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -26,7 +28,7 @@ object Repository {
      * 需要使用async函数，在协程中跑完，返回一个延迟(deferred)结果，需要数据时调用await()即可获得数据
      */
 
-
+    //调用网络请求！！
     fun searchPlace(location: String) = fire(Dispatchers.IO) {
         val placeResponse = WhanWeatherNetwork.searchPlace(location)
         if (placeResponse.results.isNotEmpty()) {
@@ -78,5 +80,14 @@ object Repository {
             }
             emit(result)
         }
+
+
+    //从本地存储SharedPreferences文件中增加、查询、判断是否存在等！！！
+    fun savePlace(place: NowResponse.Place) = PlaceDao.savePlace(place)
+
+    fun getSavedPlace() = PlaceDao.getSavedPlace()
+
+    fun isPlaceSaved() = PlaceDao.isPlaceSaved()
+
 
 }
