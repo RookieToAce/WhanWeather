@@ -1,15 +1,16 @@
 package com.example.whanweather.ui.weather
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
+import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.whanweather.R
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.now.*
 
 class WeatherActivity : AppCompatActivity() {
 
-    private val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
+    val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,20 +36,53 @@ class WeatherActivity : AppCompatActivity() {
         }
 
         viewModel.weatherLiveData.observe(this, Observer {
-
             val weather = it.getOrNull()
             if (weather != null) {
-
                 showWeatherInfo(weather)
             } else {
                 Toast.makeText(this, "未查询到任何地点", Toast.LENGTH_SHORT).show()
                 it.exceptionOrNull()?.printStackTrace()
             }
+            swipeRefresh.isRefreshing = false
         })
 
-        val text = viewModel.placeName
-        viewModel.showWeather(viewModel.placeName)
+        //刷新状态
+        swipeRefresh.setColorSchemeResources(com.google.android.material.R.color.design_default_color_primary)
+        refreshWeatherInfo()
+        //刷新的下拉监听器
+        swipeRefresh.setOnRefreshListener {
+            refreshWeatherInfo()
+        }
 
+        //搜索界面
+        //openDrawer打开滑动菜单
+        searchBtn.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+        //监听DrawerLayout状态，滑动菜单隐藏，输入法隐藏！
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+
+            override fun onDrawerOpened(drawerView: View) {}
+
+            override fun onDrawerClosed(drawerView: View) {
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(
+                    drawerView.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {}
+
+        })
+
+
+    }
+
+    fun refreshWeatherInfo() {
+        viewModel.showWeather(viewModel.placeName)
+        swipeRefresh.isRefreshing = true
     }
 
     private fun showWeatherInfo(weather: Weather) {

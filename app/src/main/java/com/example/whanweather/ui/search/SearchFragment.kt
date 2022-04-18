@@ -11,9 +11,11 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.whanweather.MainActivity
 import com.example.whanweather.R
 import com.example.whanweather.logic.model.getSky
 import com.example.whanweather.ui.weather.WeatherActivity
+import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.fragment_place.*
 import kotlinx.android.synthetic.main.place_item.*
 
@@ -37,10 +39,12 @@ class SearchFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         //先进性判断，如果有地点保存，则直接进入保存的地点的天气情况，避免主界面是搜索界面！！！
-        if (viewModel.isPlaceSaved()) {
+        //加了一层逻辑判断
+        //因为将placeFragment嵌入到了WeatherActivity中，会出现无限跳转情况
+        if (activity is MainActivity && viewModel.isPlaceSaved()) {
             val place = viewModel.getSavedPlace()
             val intent = Intent(context, WeatherActivity::class.java).apply {
-                putExtra("place_name",place.location.name)
+                putExtra("place_name", place.location.name)
             }
             startActivity(intent)
             activity?.finish()
@@ -72,13 +76,22 @@ class SearchFragment : Fragment() {
         })
 
         placeCard.setOnClickListener {
-            val intent = Intent(context, WeatherActivity::class.java).apply {
-                putExtra("place_name", placeName.text)
-            }
             val place = viewModel.nowData[0]
+
+            //
+            val fragActivity = activity
+            if (fragActivity is WeatherActivity) {
+                fragActivity.drawerLayout.closeDrawers()
+                fragActivity.viewModel.placeName = place.location.name
+                fragActivity.refreshWeatherInfo()
+            } else {
+                val intent = Intent(context, WeatherActivity::class.java).apply {
+                    putExtra("place_name", placeName.text)
+                }
+                startActivity(intent)
+                fragActivity?.finish()
+            }
             viewModel.savePlace(place)
-            startActivity(intent)
-            activity?.finish()
         }
 
     }
