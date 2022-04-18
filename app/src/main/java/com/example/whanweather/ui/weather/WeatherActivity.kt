@@ -3,6 +3,7 @@ package com.example.whanweather.ui.weather
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -99,7 +100,7 @@ class WeatherActivity : AppCompatActivity() {
 
         //填充now.xml布局中的数据
         weatherPlaceName.text = nowData.location.name
-        val tempText = "${nowData.now.temperature} ℃"
+        val tempText = nowData.now.temperature
         currentTemp.text = tempText
         currentSky.text = nowData.now.text
         val humidityText = "湿度:${dailyData.daily[0].humidity}"

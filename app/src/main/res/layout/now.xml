@@ -48,7 +48,7 @@
                 android:id="@+id/currentTemp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="80sp"
+                android:textSize="90sp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#fff" />
 

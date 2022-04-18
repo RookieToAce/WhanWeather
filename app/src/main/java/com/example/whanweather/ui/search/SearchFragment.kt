@@ -1,11 +1,15 @@
 package com.example.whanweather.ui.search
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -51,16 +55,33 @@ class SearchFragment : Fragment() {
             return
         }
 
-        searchPlaceEdit.addTextChangedListener {
-            val content = it.toString()
-            if (content.isNotEmpty()) {
-                //当输入的不为空时，进入仓库层进行搜索，执行仓库层的逻辑，将content赋值给PlaceViewModel中的liveData对象
-                viewModel.searchPlace(content)
-            } else {
-                placeCard.visibility = View.GONE
-                viewModel.nowData.clear()
+        searchPlaceEdit.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEND ||
+                actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null) && KeyEvent.KEYCODE_ENTER == event.keyCode && KeyEvent.ACTION_DOWN == event.action
+            ) {
+                val content = searchPlaceEdit.text.toString()
+                if (content.isNotEmpty()) {
+                    //当输入的不为空时，进入仓库层进行搜索，执行仓库层的逻辑，将content赋值给PlaceViewModel中的liveData对象
+                    viewModel.searchPlace(content)
+                } else {
+                    placeCard.visibility = View.GONE
+                    viewModel.nowData.clear()
+                }
             }
+            false
         }
+
+//        searchPlaceEdit.addTextChangedListener {
+//            val content = it.toString()
+//            if (content.isNotEmpty()) {
+//                //当输入的不为空时，进入仓库层进行搜索，执行仓库层的逻辑，将content赋值给PlaceViewModel中的liveData对象
+//                viewModel.searchPlace(content)
+//            } else {
+//                placeCard.visibility = View.GONE
+//                viewModel.nowData.clear()
+//            }
+//        }
 
         viewModel.placeLiveData.observe(viewLifecycleOwner, Observer {
             val placeData = it.getOrNull()
@@ -77,8 +98,6 @@ class SearchFragment : Fragment() {
 
         placeCard.setOnClickListener {
             val place = viewModel.nowData[0]
-
-            //
             val fragActivity = activity
             if (fragActivity is WeatherActivity) {
                 fragActivity.drawerLayout.closeDrawers()
@@ -103,8 +122,8 @@ class SearchFragment : Fragment() {
         placeName.text = placeResponse.name
         placeAddress.text = placeResponse.path
         nowWeatherImg.setImageResource(getSky(nowResponse.text).icon)
-        val tempText = "${nowResponse.temperature} ℃"
-        nowTemperatureText.text = tempText
+        val tempText = "${nowResponse.temperature}<sup><small>℃</small></sup>"
+        nowTemperatureText.text = Html.fromHtml(tempText)
     }
 
 }
