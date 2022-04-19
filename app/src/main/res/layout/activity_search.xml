@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.placeManager.SearchActivity">
+
+    <Button
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="⬅"
+        android:textAllCaps="false"
+        android:textColor="#000"
+        android:gravity="center_vertical"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/cityManagerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/backBtn"
+        android:text="城市管理"
+        android:layout_margin="15dp"
+        android:textSize="30sp"/>
+
+    <LinearLayout
+        android:id="@+id/cityManagerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cityManagerText"
+        android:layout_margin="15dp"
+        android:orientation="vertical" />
+
+</RelativeLayout>

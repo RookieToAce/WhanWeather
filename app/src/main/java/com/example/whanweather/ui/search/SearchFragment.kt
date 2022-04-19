@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.whanweather.MainActivity
 import com.example.whanweather.R
+import com.example.whanweather.logic.Repository
 import com.example.whanweather.logic.model.getSky
 import com.example.whanweather.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.activity_weather.*
@@ -120,10 +121,13 @@ class SearchFragment : Fragment() {
         val nowResponse = viewModel.nowData[0].now
         Log.d("main", "size = ${viewModel.nowData.size}")
         placeName.text = placeResponse.name
-        placeAddress.text = placeResponse.path
+        //placeAddress.text = placeResponse.path
+
+        //placeCard.setBackgroundResource(getSky(nowResponse.text).bg)
         nowWeatherImg.setImageResource(getSky(nowResponse.text).icon)
-        val tempText = "${nowResponse.temperature}<sup><small>℃</small></sup>"
-        nowTemperatureText.text = Html.fromHtml(tempText)
+        val tempText = "${nowResponse.temperature}°"
+        nowTemperatureText.text = tempText
+
     }
 
 }

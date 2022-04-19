@@ -89,5 +89,13 @@ object Repository {
 
     fun isPlaceSaved() = PlaceDao.isPlaceSaved()
 
+    fun saveWeatherToday(sky: String, temperature: String) = PlaceDao.saveWeatherToday(sky,temperature)
+    fun saveWeatherTomorrow(sky: String, temperature: String) = PlaceDao.saveWeatherTomorrow(sky,temperature)
+
+    fun getSkyToday() = PlaceDao.getSkyToday()
+    fun getSkyTomorrow() = PlaceDao.getSkyTomorrow()
+
+    fun getTempToday() = PlaceDao.getTempToday()
+    fun getTempTomorrow() = PlaceDao.getTempTomorrow()
 
 }

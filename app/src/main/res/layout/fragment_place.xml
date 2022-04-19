@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
 
     <ImageView
         android:id="@+id/bgImageView"
@@ -14,7 +17,8 @@
         android:id="@+id/actionBarLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/design_default_color_primary">
+        android:layout_margin="15dp"
+        android:background="@android:color/transparent">
 
         <EditText
             android:id="@+id/searchPlaceEdit"
@@ -27,21 +31,18 @@
             android:paddingEnd="10dp"
             android:autofillHints="no"
             android:inputType="text"
-            android:hint="输入地点"
+            android:hint="🔍  搜索城市天气"
             android:background="@drawable/search_bg"
             android:imeOptions="actionSend" />
 
     </FrameLayout>
 
-    <include
-        layout="@layout/place_item"
+    <include layout="@layout/place_item"
         android:id="@+id/placeCard"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:visibility="gone"
-        android:layout_below="@id/actionBarLayout" />
+        android:layout_height="110dp"
+        android:layout_below="@id/actionBarLayout"
+        tools:ignore="NotSibling" />
 
 
 </RelativeLayout>

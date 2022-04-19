@@ -12,8 +12,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhanWeather">
+        <receiver
+            android:name=".logic.BroadCast.TomorrowReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.whanweather.TOMORROW_NOTIFY" />
+            </intent-filter>
+
+        </receiver>
+        <receiver
+            android:name=".logic.BroadCast.TodayWeatherReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.whanweather.TODAY_NOTIFY" />
+            </intent-filter>
+        </receiver>
+
+
+        <service
+            android:name=".ui.service.SettingService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
-            android:name=".ui.weather.WeatherActivity"
+            android:name=".ui.setting.SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.placeManager.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".ui.weather.WeatherActivity"

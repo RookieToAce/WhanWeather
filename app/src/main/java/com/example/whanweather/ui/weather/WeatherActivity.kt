@@ -1,9 +1,9 @@
 package com.example.whanweather.ui.weather
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Html
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -15,8 +15,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.whanweather.R
+import com.example.whanweather.logic.Repository
 import com.example.whanweather.logic.model.getSky
 import com.example.whanweather.logic.network.Weather
+import com.example.whanweather.ui.setting.SettingActivity
 import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.forecast.*
 import kotlinx.android.synthetic.main.life_index.*
@@ -55,6 +57,11 @@ class WeatherActivity : AppCompatActivity() {
             refreshWeatherInfo()
         }
 
+//        searchBtn.setOnClickListener {
+//            val intent = Intent(it.context, SearchActivity::class.java)
+//            startActivity(intent)
+//        }
+
         //搜索界面
         //openDrawer打开滑动菜单
         searchBtn.setOnClickListener {
@@ -78,6 +85,13 @@ class WeatherActivity : AppCompatActivity() {
 
         })
 
+        //Setting界面
+        settingButton.setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java).apply {
+                putExtra("place_name", weatherPlaceName.text)
+            }
+            startActivity(intent)
+        }
 
     }
 
@@ -104,12 +118,12 @@ class WeatherActivity : AppCompatActivity() {
         currentTemp.text = tempText
         currentSky.text = nowData.now.text
         val humidityText = "湿度:${dailyData.daily[0].humidity}"
-        currentHumidity.text = humidityText
+        //currentHumidity.text = humidityText
 
         //填充forecast.xml中的数据
         forecastLayout.removeAllViews()    //因为是动态填充，以防再次填充时有旧数据
         val days = dailyData.daily.size
-        for (i in 0 until days) {
+        for (i in 0 until 3) {
             val dataInfoText = dailyData.daily[i].date
             val skyDay = dailyData.daily[i].textDay
             val skyNight = dailyData.daily[i].textNight
@@ -126,7 +140,14 @@ class WeatherActivity : AppCompatActivity() {
             val skyInfo = view.findViewById<TextView>(R.id.skyInfo)
             val tempInfo = view.findViewById<TextView>(R.id.tempInfo)
 
-            dataInfo.text = dataInfoText
+            dataInfo.text = when (i) {
+                0 -> "今天"
+                1 -> "明天"
+                2 -> "后天"
+                else -> ""
+            }
+
+            //dataInfo.text = dataInfoText
             skyIcon.setImageResource(getSky(skyDay).icon)
             if (skyDay == skyNight) {
                 skyInfo.text = skyDay
@@ -140,6 +161,16 @@ class WeatherActivity : AppCompatActivity() {
 
             //添加进组件
             forecastLayout.addView(view)
+
+            //向仓库保存数据
+            if (i == 0) {
+                Repository.saveWeatherToday(skyInfo.text.toString(), tempInfo.text.toString())
+            }
+
+            if (i == 1) {
+                Repository.saveWeatherTomorrow(skyInfo.text.toString(), tempInfo.text.toString())
+            }
+
         }
 
         //生活指数板块
