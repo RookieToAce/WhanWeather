@@ -1,9 +1,12 @@
 package com.example.whanweather.logic
 
 import androidx.lifecycle.liveData
+import com.example.whanweather.WhanWeatherApplication
 import com.example.whanweather.logic.dao.PlaceDao
+import com.example.whanweather.logic.entity.PlaceRecord
 import com.example.whanweather.logic.network.Weather
 import com.example.whanweather.logic.network.WhanWeatherNetwork
+import com.example.whanweather.logic.weatherdatabase.WeatherDatabase
 import com.example.whanweather.ui.search.NowResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -27,6 +30,8 @@ object Repository {
      * 这两个对象分别来自于不同的网络请求，并发可以提升执行效率，但是想着同时得到他们的响应结果，才来继续执行
      * 需要使用async函数，在协程中跑完，返回一个延迟(deferred)结果，需要数据时调用await()即可获得数据
      */
+
+    private val historyDao = WeatherDatabase.getDatabase(WhanWeatherApplication.context).HistoryDao()
 
     //调用网络请求！！
     fun searchPlace(location: String) = fire(Dispatchers.IO) {
@@ -89,8 +94,11 @@ object Repository {
 
     fun isPlaceSaved() = PlaceDao.isPlaceSaved()
 
-    fun saveWeatherToday(sky: String, temperature: String) = PlaceDao.saveWeatherToday(sky,temperature)
-    fun saveWeatherTomorrow(sky: String, temperature: String) = PlaceDao.saveWeatherTomorrow(sky,temperature)
+    fun saveWeatherToday(sky: String, temperature: String) =
+        PlaceDao.saveWeatherToday(sky, temperature)
+
+    fun saveWeatherTomorrow(sky: String, temperature: String) =
+        PlaceDao.saveWeatherTomorrow(sky, temperature)
 
     fun getSkyToday() = PlaceDao.getSkyToday()
     fun getSkyTomorrow() = PlaceDao.getSkyTomorrow()
@@ -98,4 +106,16 @@ object Repository {
     fun getTempToday() = PlaceDao.getTempToday()
     fun getTempTomorrow() = PlaceDao.getTempTomorrow()
 
+
+    /**
+     * 数据库增删改查操作
+     */
+
+    fun getPlacesFromDatabase() = historyDao.loadAllPlaces()
+    fun insertPlace(placeRecord: PlaceRecord) = historyDao.insertPlace(placeRecord)
+    fun delete(place: PlaceRecord) = historyDao.delete(place)
+    fun containPlace(name: String) = historyDao.containPlace(name)
+    fun updatePlace(newPlace: PlaceRecord) = historyDao.updatePlace(newPlace)
+    fun deleteAll() = historyDao.deleteAll()
+    fun getPlaceFormName(name: String) = historyDao.getPlaceFormName(name)
 }

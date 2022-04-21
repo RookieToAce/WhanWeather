@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.placeManager.SearchActivity">
+    tools:context=".ui.placeManager.HistoryRecordActivity">
 
     <Button
         android:id="@+id/backBtn"
@@ -13,24 +13,37 @@
         android:text="⬅"
         android:textAllCaps="false"
         android:textColor="#000"
+        android:layout_margin="15dp"
         android:gravity="center_vertical"
         android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/clearBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/transparent"
+        android:text="Clear"
+        android:layout_margin="15dp"
+        android:textColor="#000"
+        android:textAllCaps="false"
+        android:textSize="18sp" />
+
 
     <TextView
         android:id="@+id/cityManagerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/backBtn"
-        android:text="城市管理"
+        android:text="历史记录"
         android:layout_margin="15dp"
         android:textSize="30sp"/>
 
-    <LinearLayout
-        android:id="@+id/cityManagerLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/historyRecord"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/cityManagerText"
-        android:layout_margin="15dp"
-        android:orientation="vertical" />
+        android:layout_margin="15dp" />
 
 </RelativeLayout>

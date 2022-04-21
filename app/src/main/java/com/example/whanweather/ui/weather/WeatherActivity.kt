@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -16,15 +17,24 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.whanweather.R
 import com.example.whanweather.logic.Repository
+import com.example.whanweather.logic.entity.PlaceRecord
+import com.example.whanweather.logic.model.TimeUnits
 import com.example.whanweather.logic.model.getSky
 import com.example.whanweather.logic.network.Weather
+import com.example.whanweather.ui.placeManager.HistoryRecordActivity
+import com.example.whanweather.ui.search.SearchFragment
 import com.example.whanweather.ui.setting.SettingActivity
 import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.forecast.*
 import kotlinx.android.synthetic.main.life_index.*
 import kotlinx.android.synthetic.main.now.*
+import kotlin.concurrent.thread
 
 class WeatherActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "WeatherActivity"
+    }
 
     val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
 
@@ -34,9 +44,13 @@ class WeatherActivity : AppCompatActivity() {
         setContentView(R.layout.activity_weather)
 
         //通过搜索界面搜索出来的点击事件的Intent来触发这个天气界面
+
         if (viewModel.placeName.isEmpty()) {
             viewModel.placeName = intent.getStringExtra("place_name") ?: ""
+            Log.d(TAG, "${viewModel.placeName}")
+            viewModel.showWeather(viewModel.placeName)
         }
+//        refreshWeatherInfo()
 
         viewModel.weatherLiveData.observe(this, Observer {
             val weather = it.getOrNull()
@@ -58,7 +72,7 @@ class WeatherActivity : AppCompatActivity() {
         }
 
 //        searchBtn.setOnClickListener {
-//            val intent = Intent(it.context, SearchActivity::class.java)
+//            val intent = Intent(it.context, HistoryRecordActivity::class.java)
 //            startActivity(intent)
 //        }
 
@@ -67,6 +81,7 @@ class WeatherActivity : AppCompatActivity() {
         searchBtn.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
+
         //监听DrawerLayout状态，滑动菜单隐藏，输入法隐藏！
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
@@ -87,9 +102,7 @@ class WeatherActivity : AppCompatActivity() {
 
         //Setting界面
         settingButton.setOnClickListener {
-            val intent = Intent(this, SettingActivity::class.java).apply {
-                putExtra("place_name", weatherPlaceName.text)
-            }
+            val intent = Intent(this, HistoryRecordActivity::class.java)
             startActivity(intent)
         }
 
@@ -97,7 +110,38 @@ class WeatherActivity : AppCompatActivity() {
 
     fun refreshWeatherInfo() {
         viewModel.showWeather(viewModel.placeName)
+        refreshDatabase()
         swipeRefresh.isRefreshing = true
+    }
+
+    private fun refreshDatabase() {
+        val place = weatherPlaceName.text.toString()
+        val temp = currentTemp.text.toString()
+        val sky = currentSky.text.toString()
+
+        if (place != "" && temp != "" && sky != "") {
+            thread {
+
+                Log.d(TAG, "$place contain: ${Repository.containPlace(place)}")
+
+                if (Repository.containPlace(place)) {
+
+                    val weather = Repository.getPlaceFormName(place)
+                    weather.temperature = temp
+                    weather.sky = sky
+
+                    Repository.updatePlace(weather)
+                    Log.d(TAG, "${place}'s weather info is changed!")
+                } else {
+
+                    val weather = PlaceRecord(place, temp, sky)
+
+                    weather.id = Repository.insertPlace(weather)
+                    Log.d(TAG, "${place}'s id: ${weather.id}")
+                }
+            }
+        }
+
     }
 
     private fun showWeatherInfo(weather: Weather) {
@@ -148,7 +192,25 @@ class WeatherActivity : AppCompatActivity() {
             }
 
             //dataInfo.text = dataInfoText
-            skyIcon.setImageResource(getSky(skyDay).icon)
+            val timeNow = TimeUnits.getNowHour()
+
+            if (i == 0) {
+                Log.d(TAG, "Time: ${timeNow}点")
+                if (timeNow.toInt() in 7..18) {
+                    skyIcon.setImageResource(getSky(skyDay).icon)
+                } else {
+                    if (skyDay == "晴" || skyDay == "多云") {
+                        val sky = "${skyDay}_夜"
+                        skyIcon.setImageResource(getSky(sky).icon)
+                    } else {
+                        skyIcon.setImageResource(getSky(skyDay).icon)
+                    }
+                }
+            } else {
+                skyIcon.setImageResource(getSky(skyDay).icon)
+            }
+
+
             if (skyDay == skyNight) {
                 skyInfo.text = skyDay
             } else {

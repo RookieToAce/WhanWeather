@@ -6,9 +6,9 @@ class Sky (val info: String, val icon: Int, val bg: Int)
 
 private val sky = mapOf(
     "晴" to Sky("晴", R.drawable.ic_clear_day, R.drawable.bg_clear_day),
-    //"晴" to Sky("晴", R.drawable.ic_clear_night, R.drawable.bg_clear_night),
+    "晴_夜" to Sky("晴", R.drawable.ic_clear_night, R.drawable.bg_clear_night),
     "多云" to Sky("多云", R.drawable.ic_partly_cloud_day, R.drawable.bg_partly_cloudy_day),
-    //"多云" to Sky("多云", R.drawable.ic_partly_cloud_night, R.drawable.bg_partly_cloudy_night),
+    "多云_夜" to Sky("多云", R.drawable.ic_partly_cloud_night, R.drawable.bg_partly_cloudy_night),
     "阴" to Sky("阴", R.drawable.ic_cloudy, R.drawable.bg_cloudy),
     "大风" to Sky("大风", R.drawable.ic_cloudy, R.drawable.bg_wind),
     "小雨" to Sky("小雨", R.drawable.ic_light_rain, R.drawable.bg_rain),

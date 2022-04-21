@@ -17,18 +17,28 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.whanweather.MainActivity
 import com.example.whanweather.R
+import com.example.whanweather.WhanWeatherApplication
 import com.example.whanweather.logic.Repository
+import com.example.whanweather.logic.dao.HistoryDao
+import com.example.whanweather.logic.entity.PlaceRecord
+import com.example.whanweather.logic.model.TimeUnits
 import com.example.whanweather.logic.model.getSky
+import com.example.whanweather.logic.weatherdatabase.WeatherDatabase
 import com.example.whanweather.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.fragment_place.*
 import kotlinx.android.synthetic.main.place_item.*
+import kotlin.concurrent.thread
 
 /**
  * 实现Fragment
  */
 
 class SearchFragment : Fragment() {
+
+    companion object {
+        const val TAG = "SearchFragment"
+    }
 
     private val viewModel by lazy { ViewModelProvider(this).get(PlaceViewModel::class.java) }
 
@@ -42,6 +52,11 @@ class SearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        /**
+         * 使用Repository进行了封装，使用统一的仓库层入口
+         */
+//        historyDao = WeatherDatabase.getDatabase(WhanWeatherApplication.context).HistoryDao()
 
         //先进性判断，如果有地点保存，则直接进入保存的地点的天气情况，避免主界面是搜索界面！！！
         //加了一层逻辑判断
@@ -73,17 +88,6 @@ class SearchFragment : Fragment() {
             false
         }
 
-//        searchPlaceEdit.addTextChangedListener {
-//            val content = it.toString()
-//            if (content.isNotEmpty()) {
-//                //当输入的不为空时，进入仓库层进行搜索，执行仓库层的逻辑，将content赋值给PlaceViewModel中的liveData对象
-//                viewModel.searchPlace(content)
-//            } else {
-//                placeCard.visibility = View.GONE
-//                viewModel.nowData.clear()
-//            }
-//        }
-
         viewModel.placeLiveData.observe(viewLifecycleOwner, Observer {
             val placeData = it.getOrNull()
             if (placeData != null) {
@@ -112,6 +116,40 @@ class SearchFragment : Fragment() {
                 fragActivity?.finish()
             }
             viewModel.savePlace(place)
+            saveWeather()
+        }
+
+    }
+
+    private fun saveWeather() {
+
+        if (viewModel.nowData.isNotEmpty()) {
+            val place = viewModel.nowData[0].location.name
+            val temperature = viewModel.nowData[0].now.temperature
+            val sky = viewModel.nowData[0].now.text
+
+            thread {
+                //val weather = PlaceRecord(place, temperature, sky)
+
+                Log.d(TAG, "contain: ${Repository.containPlace(place)}")
+
+                if (Repository.containPlace(place)) {
+
+                    val weather = Repository.getPlaceFormName(place)
+                    Log.d(TAG, "$weather")
+                    weather.temperature = temperature
+                    weather.sky = sky
+
+                    Repository.updatePlace(weather)
+                    Log.d(TAG, "${place}'s weather info is changed!")
+                } else {
+
+                    val weather = PlaceRecord(place, temperature, sky)
+
+                    weather.id = Repository.insertPlace(weather)
+                    Log.d(TAG, "${place}'s id: ${weather.id}")
+                }
+            }
         }
 
     }
@@ -119,15 +157,24 @@ class SearchFragment : Fragment() {
     private fun refreshPlaceCard() {
         val placeResponse = viewModel.nowData[0].location
         val nowResponse = viewModel.nowData[0].now
-        Log.d("main", "size = ${viewModel.nowData.size}")
         placeName.text = placeResponse.name
         //placeAddress.text = placeResponse.path
 
-        //placeCard.setBackgroundResource(getSky(nowResponse.text).bg)
-        nowWeatherImg.setImageResource(getSky(nowResponse.text).icon)
+        val timeNow = TimeUnits.getNowHour()
+        val skyNow = nowResponse.text
+        if (timeNow.toInt() in 7..18) {
+            nowWeatherImg.setImageResource(getSky(skyNow).icon)
+        } else {
+            if (skyNow == "晴" || skyNow == "多云") {
+                val sky = "${skyNow}_夜"
+                nowWeatherImg.setImageResource(getSky(sky).icon)
+            } else {
+                nowWeatherImg.setImageResource(getSky(skyNow).icon)
+            }
+        }
+
         val tempText = "${nowResponse.temperature}°"
         nowTemperatureText.text = tempText
-
     }
 
 }

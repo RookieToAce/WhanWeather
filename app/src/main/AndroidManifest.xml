@@ -19,7 +19,6 @@
             <intent-filter>
                 <action android:name="com.example.whanweather.TOMORROW_NOTIFY" />
             </intent-filter>
-
         </receiver>
         <receiver
             android:name=".logic.BroadCast.TodayWeatherReceiver"
@@ -30,7 +29,6 @@
             </intent-filter>
         </receiver>
 
-
         <service
             android:name=".ui.service.SettingService"
             android:enabled="true"
@@ -40,7 +38,7 @@
             android:name=".ui.setting.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.placeManager.SearchActivity"
+            android:name=".ui.placeManager.HistoryRecordActivity"
             android:exported="false" />
         <activity
             android:name=".ui.weather.WeatherActivity"

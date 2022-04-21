@@ -11,4 +11,10 @@ object TimeUnits {
         return simpleDataFormat.format(date)
     }
 
+    fun getNowHour(): String {
+        val simpleDataFormat = SimpleDateFormat("HH", Locale.getDefault())
+        val date = Date(System.currentTimeMillis())
+        return simpleDataFormat.format(date)
+    }
+
 }
