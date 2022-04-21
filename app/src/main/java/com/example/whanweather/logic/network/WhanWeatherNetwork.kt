@@ -38,28 +38,9 @@ object WhanWeatherNetwork {
      */
     suspend fun searchLifeIndex(location: String) = placeService.getLifeIndex(location).await()
 
-
     /**
      * 请求未来几天天气数据：目前只有今明后三天
      */
     suspend fun searchDaily(location: String) = dailyService.getDailyWeather(location).await()
-
-
-
-//    private suspend fun <T> Call<T>.await(): T {
-//        return suspendCoroutine { continuation ->
-//            enqueue(object : Callback<T> {
-//                override fun onResponse(call: Call<T>, response: Response<T>) {
-//                    val body = response.body()
-//                    if (body != null) continuation.resume(body)
-//                    else continuation.resumeWithException(RuntimeException("response body is null"))
-//                }
-//
-//                override fun onFailure(call: Call<T>, t: Throwable) {
-//                    continuation.resumeWithException(t)
-//                }
-//            })
-//        }
-//    }
 
 }

@@ -62,7 +62,5 @@ class TodayWeatherReceiver : BroadcastReceiver() {
             Log.d(TAG, "No place saved!")
         }
 
-
-        // This method is called when the BroadcastReceiver is receiving an Intent broadcast.
     }
 }

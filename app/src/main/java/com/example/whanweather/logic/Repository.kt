@@ -108,6 +108,13 @@ object Repository {
 
 
     /**
+     * 天气提醒
+     */
+    fun getWeatherNotifyState() = PlaceDao.getWeatherNotifyState()
+
+    fun saveWeatherNotify(state: Boolean) = PlaceDao.saveWeatherNotify(state)
+
+    /**
      * 数据库增删改查操作
      */
 
