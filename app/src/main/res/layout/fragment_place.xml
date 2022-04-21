@@ -3,47 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/transparent">
+    android:background="#fff">
 
-    <ImageView
-        android:id="@+id/bgImageView"
+    <EditText
+        android:id="@+id/searchPlaceEdit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/bg_place" />
-
-    <FrameLayout
-        android:id="@+id/actionBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_margin="15dp"
-        android:background="@android:color/transparent">
-
-        <EditText
-            android:id="@+id/searchPlaceEdit"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:autofillHints="no"
-            android:inputType="text"
-            android:hint="🔍  搜索城市天气"
-            android:background="@drawable/search_bg"
-            android:imeOptions="actionSend" />
-
-    </FrameLayout>
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="20dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:autofillHints="no"
+        android:inputType="text"
+        android:hint="🔍  搜索城市天气"
+        android:background="@drawable/round_corners_bg"
+        android:imeOptions="actionSend"
+        android:shadowRadius="5"/>
 
     <include layout="@layout/place_item"
         android:id="@+id/placeCard"
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:layout_below="@id/actionBarLayout"
+        android:layout_below="@id/searchPlaceEdit"
         android:visibility="gone"
         tools:ignore="NotSibling" />
+
+
+    <RelativeLayout
+        android:id="@+id/historyLayout"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/placeCard">
+
+        <TextView
+            android:id="@+id/cityManagerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="搜索记录"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/clearBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:layout_alignParentEnd="true"
+            android:text="清空"
+            android:layout_margin="15dp"
+            android:textColor="#000"
+            android:textAllCaps="false"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/historyRecord"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/historyLayout"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp" />
+
 
 
 </RelativeLayout>

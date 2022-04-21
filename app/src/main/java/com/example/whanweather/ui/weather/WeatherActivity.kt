@@ -21,7 +21,7 @@ import com.example.whanweather.logic.entity.PlaceRecord
 import com.example.whanweather.logic.model.TimeUnits
 import com.example.whanweather.logic.model.getSky
 import com.example.whanweather.logic.network.Weather
-import com.example.whanweather.ui.placeManager.HistoryRecordActivity
+import com.example.whanweather.ui.search.SearchActivity
 import com.example.whanweather.ui.search.SearchFragment
 import com.example.whanweather.ui.setting.SettingActivity
 import kotlinx.android.synthetic.main.activity_weather.*
@@ -71,15 +71,13 @@ class WeatherActivity : AppCompatActivity() {
             refreshWeatherInfo()
         }
 
-//        searchBtn.setOnClickListener {
-//            val intent = Intent(it.context, HistoryRecordActivity::class.java)
-//            startActivity(intent)
-//        }
-
         //搜索界面
         //openDrawer打开滑动菜单
         searchBtn.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+            finish()
+//            drawerLayout.openDrawer(GravityCompat.START)
         }
 
         //监听DrawerLayout状态，滑动菜单隐藏，输入法隐藏！
@@ -102,7 +100,7 @@ class WeatherActivity : AppCompatActivity() {
 
         //Setting界面
         settingButton.setOnClickListener {
-            val intent = Intent(this, HistoryRecordActivity::class.java)
+            val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
 
@@ -154,7 +152,8 @@ class WeatherActivity : AppCompatActivity() {
         val lifeIndex = weather.lifeIndex.results[0]
 
         //设置天气首页背景
-        weatherLayout.setBackgroundResource(getSky(nowData.now.text).bg)
+        wholeLayout.setBackgroundResource(getSky(nowData.now.text).bg)
+//        weatherLayout.setBackgroundResource(getSky(nowData.now.text).bg)
 
         //填充now.xml布局中的数据
         weatherPlaceName.text = nowData.location.name

@@ -7,15 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.whanweather.R
 import com.example.whanweather.logic.entity.PlaceRecord
 import com.example.whanweather.logic.model.getSky
+import com.example.whanweather.ui.search.SearchFragment
 import com.example.whanweather.ui.weather.WeatherActivity
 
 class HistoryAdapter(
-    private val activity: AppCompatActivity,
+    private val fragment: SearchFragment,
     private val placeList: List<PlaceRecord>
 ) :
     RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
@@ -44,10 +44,11 @@ class HistoryAdapter(
 
         holder.itemView.setOnClickListener {
 
-            val intent1 = Intent(activity.baseContext,WeatherActivity::class.java).apply {
+            val intent1 = Intent(fragment.context,WeatherActivity::class.java).apply {
                 putExtra("place_name", place.name)
             }
-            activity.startActivity(intent1)
+            fragment.startActivity(intent1)
+            fragment.activity?.finish()
             Log.d(TAG,"You clicked ${place.name}")
         }
 

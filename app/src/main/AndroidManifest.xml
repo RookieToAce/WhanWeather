@@ -12,6 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhanWeather">
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".logic.BroadCast.TomorrowReceiver"
             android:enabled="true"

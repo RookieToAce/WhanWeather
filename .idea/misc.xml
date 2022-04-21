@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/code/WhanWeather/app/src/main/res/drawable/round_corners_bg.xml" value="0.194" />
+        <entry key="..\:/code/WhanWeather/app/src/main/res/layout/activity_history.xml" value="0.36614583333333334" />
+        <entry key="..\:/code/WhanWeather/app/src/main/res/layout/activity_search.xml" value="0.17806484295845998" />
+        <entry key="..\:/code/WhanWeather/app/src/main/res/layout/activity_weather.xml" value="0.23876404494382023" />
+        <entry key="..\:/code/WhanWeather/app/src/main/res/layout/fragment_place.xml" value="0.17806484295845998" />
+        <entry key="..\:/code/WhanWeather/app/src/main/res/layout/now.xml" value="0.17806484295845998" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>
